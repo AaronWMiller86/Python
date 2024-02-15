@@ -22,26 +22,25 @@ class Weather:
     def location(self):
 
         location = geoloc.geocode(self.loc)
-        lat = f"{location.latitude}"
-        long = f"{location.longitude}"
-
-        points_request = requests.get(f"{API_URL}points/{lat},{long}")
+        lat_long = f"{location.latitude},{location.longitude}"
+        
+        points_request = requests.get(f"{API_URL}points/{lat_long}")
         points_response = json.loads(points_request.text)
 
         grid = points_response['properties']
-        gridId = grid['gridId']
-        gridX = grid['gridX']
-        gridY = grid['gridY']
-        return f"{gridId}/{gridX},{gridY}"
+        grid_str = f"{grid['gridId']}/{grid['gridX']},{grid['gridY']}"
+        
+        return grid_str
        
-       
+
     def forecast(self):
         forecast_request = requests.get(f"{API_URL}gridpoints/{self.location()}/forecast")
-        forecast = json.loads(forecast_request.text)
+        forecast_response = json.loads(forecast_request.text)
+        
         print(f"The forecast for {city} is: ")
-        print(forecast)
+        print(forecast_response)
 
 
-w1 = Weather(city)
+new_weather = Weather(city)
 
-w1.forecast()
+new_weather.forecast()
