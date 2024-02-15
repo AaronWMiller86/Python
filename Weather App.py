@@ -1,15 +1,18 @@
-#Weather App
+# Weather App by Aaron Miller
 
 import json
 import requests
-import re
 
-
-#Longitude and Latitude Geocoder
+# Longitude and Latitude Geocoder using Nominatim API
 from geopy.geocoders import Nominatim
 geoloc = Nominatim(user_agent="Weather App")
 
-API_URL = 'https://api.weather.gov/'
+# Weather.gov API URL
+API_URL = "https://api.weather.gov/"
+
+#Input for location. City and State only. Zip Code is not currently supported.
+city =  input("Input City: ")
+
 
 class Weather:
     def __init__(self, loc):
@@ -19,27 +22,26 @@ class Weather:
     def location(self):
 
         location = geoloc.geocode(self.loc)
-        lat = str(location.latitude)
-        long = str(location.longitude)
+        lat = f"{location.latitude}"
+        long = f"{location.longitude}"
 
-        points = requests.get(API_URL + 'points/' + lat + ',' + long)
+        points_request = requests.get(f"{API_URL}points/{lat},{long}")
+        points_response = json.loads(points_request.text)
 
-        response = json.loads(points.text)
-        grid_data = response['properties']
-        gridId = grid_data['gridId']
-        gridX = grid_data['gridX']
-        gridY = grid_data['gridY']
-
-        return str(gridId) + '/' + str(gridX) + ',' + str(gridY)
-
-
+        grid = points_response['properties']
+        gridId = grid['gridId']
+        gridX = grid['gridX']
+        gridY = grid['gridY']
+        return f"{gridId}/{gridX},{gridY}"
+       
+       
     def forecast(self):
-        response = requests.get(API_URL + 'gridpoints/' + self.location() + '/forecast')
-        forecast = json.loads(response.text)
+        forecast_request = requests.get(f"{API_URL}gridpoints/{self.location()}/forecast")
+        forecast = json.loads(forecast_request.text)
+        print(f"The forecast for {city} is: ")
         print(forecast)
-        
 
 
-w1 = Weather("Louisville")
+w1 = Weather(city)
 
 w1.forecast()
