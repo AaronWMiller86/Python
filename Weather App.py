@@ -36,9 +36,7 @@ class Weather:
     def forecast(self):
         forecast_request = requests.get(f"{API_URL}gridpoints/{self.location()}/forecast")
         forecast_response = json.loads(forecast_request.text)
-
-        #formatted_forcast = f"{forecast_response[]}"
-
+        #formatted_forcast = f"{forecast['detailedForecast']}"
         print(f"The forecast for {city} is: ")
         print(forecast_response)
 
