@@ -3,6 +3,7 @@
 import json
 import requests
 import sys
+import os
 
 # Longitude and Latitude Geocoder using Nominatim API
 from geopy.geocoders import Nominatim
@@ -26,6 +27,7 @@ class Weather:
 
     
     def menu(self):
+
         choice = input("""
                        1. Current Weather
                        2. Daily Forecast
@@ -61,7 +63,7 @@ class Weather:
 
         elif choice == "5":
             sys.exit
-            
+
         else:
             print("You must input you selection 1 through 4.")
             print("Please try again.")
@@ -97,10 +99,15 @@ class Weather:
     def daily_forecast(self):
         cashed_forcast = self.forecast()
         i = 0
-        while i < 7:
+        while i < 10:
+            print(f"{cashed_forcast['properties']['periods'][i]['name']}")
             print(f"{cashed_forcast['properties']['periods'][i]['detailedForecast']}")
             print()
             i+=1
+        print()
+        print("Hit any key to return to menu.")
+        input()
+        os.system("cls")
         self.menu()
     
 
