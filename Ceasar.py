@@ -1,6 +1,8 @@
 def ceasar(text, amount):
+    amount = int(amount)
     correction_amount = 26 - amount
     result = ""
+
     for letter in text:
         if letter.isalpha():
             if chr(ord(letter) + amount).isalpha():
